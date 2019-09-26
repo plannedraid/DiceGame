@@ -10,9 +10,12 @@
  */
 public class DiceGame extends javax.swing.JFrame {
 
-    /**
-     * Creates new form DiceGame
-     */
+     int totalRolls = 0;
+        int totalCorrect = 0;
+        int totalIncorrect = 0;
+        int userGuess;
+        int diceNum;
+        double percentCorrect = 0;
     public DiceGame() {
         initComponents();
     }
@@ -36,12 +39,13 @@ public class DiceGame extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         userInput = new javax.swing.JTextField();
-        jLabel8 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
-        jLabel11 = new javax.swing.JLabel();
+        numOfRollsLbl = new javax.swing.JLabel();
+        numOfCorrectLbl = new javax.swing.JLabel();
+        numOfIncorrectLbl = new javax.swing.JLabel();
+        percentageLbl = new javax.swing.JLabel();
         lblUserGuess = new javax.swing.JLabel();
         lblDiceRoll = new javax.swing.JLabel();
+        diceNumLbl = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -56,6 +60,11 @@ public class DiceGame extends javax.swing.JFrame {
 
         btnRollDice.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
         btnRollDice.setText("Role");
+        btnRollDice.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRollDiceActionPerformed(evt);
+            }
+        });
 
         jLabel4.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
         jLabel4.setText("Number of rolls:");
@@ -75,23 +84,26 @@ public class DiceGame extends javax.swing.JFrame {
             }
         });
 
-        jLabel8.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
-        jLabel8.setText("0");
+        numOfRollsLbl.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
+        numOfRollsLbl.setText("0");
 
-        jLabel9.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
-        jLabel9.setText("0");
+        numOfCorrectLbl.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
+        numOfCorrectLbl.setText("0");
 
-        jLabel10.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
-        jLabel10.setText("0");
+        numOfIncorrectLbl.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
+        numOfIncorrectLbl.setText("0");
 
-        jLabel11.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
-        jLabel11.setText("0");
+        percentageLbl.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
+        percentageLbl.setText("0");
 
         lblUserGuess.setFont(new java.awt.Font("Verdana", 1, 14)); // NOI18N
         lblUserGuess.setText("Your Guess");
 
         lblDiceRoll.setFont(new java.awt.Font("Verdana", 1, 14)); // NOI18N
         lblDiceRoll.setText("Dice Roll");
+
+        diceNumLbl.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        diceNumLbl.setText("0");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -108,23 +120,25 @@ public class DiceGame extends javax.swing.JFrame {
                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                             .addComponent(jLabel6)
                             .addGap(18, 18, 18)
-                            .addComponent(jLabel10))
+                            .addComponent(numOfIncorrectLbl))
                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                             .addComponent(jLabel5)
                             .addGap(18, 18, 18)
-                            .addComponent(jLabel9))
+                            .addComponent(numOfCorrectLbl))
                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                 .addComponent(jLabel4)
                                 .addComponent(jLabel7))
                             .addGap(18, 18, 18)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel11)
-                                .addComponent(jLabel8))))
+                                .addComponent(percentageLbl)
+                                .addComponent(numOfRollsLbl))))
                     .addComponent(lblHeader)
                     .addComponent(btnRollDice, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(240, 240, 240)
-                .addComponent(lblDiceRoll)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(lblDiceRoll, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(diceNumLbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(57, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -141,25 +155,27 @@ public class DiceGame extends javax.swing.JFrame {
                     .addComponent(lblUserGuess, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblDiceRoll, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(userInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(userInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(diceNumLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(btnRollDice, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(133, 133, 133)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(numOfRollsLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
-                    .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(numOfCorrectLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(numOfIncorrectLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
-                    .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(percentageLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(13, 13, 13))
         );
 
@@ -167,15 +183,11 @@ public class DiceGame extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 30, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -184,6 +196,32 @@ public class DiceGame extends javax.swing.JFrame {
     private void userInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_userInputActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_userInputActionPerformed
+
+    private void btnRollDiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRollDiceActionPerformed
+       
+
+        diceNum = (int)Math.round(Math.random() * 5 + 1);
+        diceNumLbl.setText(String.valueOf(diceNum));
+        
+        userGuess = Integer.parseInt(userInput.getText());
+
+        totalRolls = totalRolls + 1;
+
+        if (diceNum == userGuess) {
+            totalCorrect = totalCorrect + 1;
+        } else {
+            totalIncorrect = totalIncorrect + 1;
+        }
+        percentCorrect = ((double)totalCorrect/(double)totalRolls)*100;
+        percentCorrect = percentCorrect *100;
+        percentCorrect = Math.round(percentCorrect);
+        percentCorrect = percentCorrect / 100;
+        
+        numOfRollsLbl.setText(String.valueOf(totalRolls));
+        numOfCorrectLbl.setText(String.valueOf(totalCorrect));
+        numOfIncorrectLbl.setText(String.valueOf(totalIncorrect));
+        percentageLbl.setText(String.valueOf(percentCorrect));
+    }//GEN-LAST:event_btnRollDiceActionPerformed
 
     /**
      * @param args the command line arguments
@@ -222,20 +260,21 @@ public class DiceGame extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnRollDice;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel diceNumLbl;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lblDiceRoll;
     private javax.swing.JLabel lblHeader;
     private javax.swing.JLabel lblInst1;
     private javax.swing.JLabel lblInst2;
     private javax.swing.JLabel lblUserGuess;
+    private javax.swing.JLabel numOfCorrectLbl;
+    private javax.swing.JLabel numOfIncorrectLbl;
+    private javax.swing.JLabel numOfRollsLbl;
+    private javax.swing.JLabel percentageLbl;
     private javax.swing.JTextField userInput;
     // End of variables declaration//GEN-END:variables
 }
